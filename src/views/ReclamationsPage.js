@@ -1,48 +1,22 @@
-import { Col, Row } from "reactstrap";
-import ProjectTables from "../components/dashboard/ProjectTable";
+import { Button, Col, Row } from "reactstrap";
 
-import Blog from "../components/dashboard/Blog";
-import bg1 from "../assets/images/bg/bg1.jpg";
-import bg2 from "../assets/images/bg/bg2.jpg";
-import bg3 from "../assets/images/bg/bg3.jpg";
-import bg4 from "../assets/images/bg/bg4.jpg";
-
-const BlogData = [
-  {
-    image: bg1,
-    title: "This is simple blog",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-  {
-    image: bg2,
-    title: "Lets be simple blog",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-  {
-    image: bg3,
-    title: "Don't Lamp blog",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-  {
-    image: bg4,
-    title: "Simple is beautiful",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-];
+import { useEffect, useState } from "react";
+//import reclamationServices from "../services/Reclamation.services";
+import axios from "axios";
+import ReclamationsTable from "../components/dashboard/ReclamationsTable";
+import { Link } from "react-router-dom";
 
 const ReclamationsPage = () => {
+  const [reclamations, setreclamations] = useState([]);
+  const [deleted, setDeleted] = useState(0);
+  const increment = () => {
+    setDeleted(deleted + 1);
+  };
+  useEffect(() => {
+    axios.get("http://localhost:8051/reclamations/all").then((res) => {
+      setreclamations(res.data);
+    });
+  }, [deleted]);
   return (
     <div>
       {/***Top Cards***/}
@@ -50,23 +24,18 @@ const ReclamationsPage = () => {
       {/***Table ***/}
       <Row>
         <Col lg="12">
-          <ProjectTables />
+          <ReclamationsTable
+            reclamations={reclamations}
+            increment={increment}
+          />
         </Col>
       </Row>
       {/***Blog Cards***/}
-      <Row>
-        {BlogData.map((blg, index) => (
-          <Col sm="6" lg="6" xl="3" key={index}>
-            <Blog
-              image={blg.image}
-              title={blg.title}
-              subtitle={blg.subtitle}
-              text={blg.description}
-              color={blg.btnbg}
-            />
-          </Col>
-        ))}
-      </Row>
+      <Link to={"/addReclamation"}>
+        <Button className="btn" outline color="info">
+          <i class="bi bi-plus"></i>Add Reclamation
+        </Button>
+      </Link>
     </div>
   );
 };

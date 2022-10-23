@@ -1,5 +1,7 @@
+//router
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
+
 
 /****Layouts*****/
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
@@ -22,7 +24,8 @@ const Grid = lazy(() => import("../views/ui/Grid"));
 const Tables = lazy(() => import("../views/ui/Tables"));
 const Forms = lazy(() => import("../views/ui/Forms"));
 const Breadcrumbs = lazy(() => import("../views/ui/Breadcrumbs"));
-
+const AddReclamation=lazy(()=>import("../views/Reclamation/ReclamationForm"));
+const UpdateReclamation=lazy(()=>import("../views/Reclamation/ReclamationUpdate"));
 /*****Routes******/
 
 const ThemeRoutes = [
@@ -47,6 +50,8 @@ const ThemeRoutes = [
       { path: "/table", exact: true, element: <Tables /> },
       { path: "/forms", exact: true, element: <Forms /> },
       { path: "/breadcrumbs", exact: true, element: <Breadcrumbs /> },
+      { path: "/addReclamation", exact: true, element: <AddReclamation /> },
+      { path: "/updateReclamation/:id", exact: true, element: <UpdateReclamation/> },
     ],
   },
 ];
