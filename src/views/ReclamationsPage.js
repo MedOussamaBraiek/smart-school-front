@@ -1,4 +1,5 @@
 import { Button, Col, Row } from "reactstrap";
+import ProjectTables from "../components/dashboard/ProjectTable";
 
 import { useEffect, useState } from "react";
 //import reclamationServices from "../services/Reclamation.services";
@@ -7,16 +8,6 @@ import ReclamationsTable from "../components/dashboard/ReclamationsTable";
 import { Link } from "react-router-dom";
 
 const ReclamationsPage = () => {
-  const [reclamations, setreclamations] = useState([]);
-  const [deleted, setDeleted] = useState(0);
-  const increment = () => {
-    setDeleted(deleted + 1);
-  };
-  useEffect(() => {
-    axios.get("http://localhost:8051/reclamations/all").then((res) => {
-      setreclamations(res.data);
-    });
-  }, [deleted]);
   return (
     <div>
       {/***Top Cards***/}
@@ -24,10 +15,7 @@ const ReclamationsPage = () => {
       {/***Table ***/}
       <Row>
         <Col lg="12">
-          <ReclamationsTable
-            reclamations={reclamations}
-            increment={increment}
-          />
+          <ProjectTables />
         </Col>
       </Row>
       {/***Blog Cards***/}
