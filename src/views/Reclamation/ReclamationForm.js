@@ -13,7 +13,9 @@ import {
   FormGroup,
   Label,
   Input,
+  Alert,
 } from "reactstrap";
+import { reclamationValidation } from "../../utils/reclamation.validation";
 
 const ReclamationForm = () => {
   const [options, setoptions] = useState([]);
@@ -39,8 +41,9 @@ const ReclamationForm = () => {
           }
         });
     },
-    validateOnChange: false,
-    validateOnBlur: false,
+    validateOnChange: true,
+    validateOnBlur: true,
+    validationSchema: reclamationValidation,
   });
   return (
     <Row>
@@ -65,6 +68,9 @@ const ReclamationForm = () => {
                   onChange={formik.handleChange}
                   value={formik.values.title}
                 />
+                {formik.touched.title && formik.errors.title ? (
+                  <Alert color="danger">{formik.errors.title}</Alert>
+                ) : null}
               </FormGroup>
               <FormGroup>
                 <Label for="ownerId">ownerId</Label>
@@ -76,25 +82,30 @@ const ReclamationForm = () => {
                   onChange={formik.handleChange}
                   value={formik.values.ownerId}
                 />
+                {formik.touched.ownerId && formik.errors.ownerId ? (
+                  <Alert color="danger">{formik.errors.ownerId}</Alert>
+                ) : null}
               </FormGroup>
               <FormGroup>
                 <Label for="eventId">Event</Label>
-                {
-                  <Input
-                    id="eventId"
-                    name="eventId"
-                    type="select"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    value={formik.values.eventId}
-                  >
-                    {options.map((event, index) => (
-                      <option key={index} value={event.id}>
-                        {event.title}
-                      </option>
-                    ))}
-                  </Input>
-                }
+
+                <Input
+                  id="eventId"
+                  name="eventId"
+                  type="select"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.eventId}
+                >
+                  {options.map((event, index) => (
+                    <option key={index} value={event.id}>
+                      {event.title}
+                    </option>
+                  ))}
+                </Input>
+                {formik.touched.eventId && formik.errors.eventId ? (
+                  <Alert color="danger">{formik.errors.eventId}</Alert>
+                ) : null}
               </FormGroup>
               <FormGroup>
                 <Label for="content">Content</Label>
@@ -106,6 +117,9 @@ const ReclamationForm = () => {
                   onChange={formik.handleChange}
                   value={formik.values.content}
                 />
+                {formik.touched.content && formik.errors.content ? (
+                  <Alert color="danger">{formik.errors.content}</Alert>
+                ) : null}
               </FormGroup>
 
               <Button className="btn" outline color="info" type="submit">

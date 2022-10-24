@@ -3,7 +3,6 @@ import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import Forums from "../views/Forums/AddForums.js";
 
-
 /****Layouts*****/
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
 
@@ -27,11 +26,16 @@ const Grid = lazy(() => import("../views/ui/Grid"));
 const Tables = lazy(() => import("../views/ui/Tables"));
 const Forms = lazy(() => import("../views/ui/Forms"));
 const Breadcrumbs = lazy(() => import("../views/ui/Breadcrumbs"));
-const AddReclamation=lazy(()=>import("../views/Reclamation/ReclamationForm"));
-const AddForums=lazy(()=>import("../views/Forums/AddForums"));
-const 
-UpdateForum = lazy(()=>import("../views/Forums/UpdateForums"));
-const UpdateReclamation=lazy(()=>import("../views/Reclamation/ReclamationUpdate"));
+const AddReclamation = lazy(() =>
+  import("../views/Reclamation/ReclamationForm")
+);
+const AddForums = lazy(() => import("../views/Forums/AddForums"));
+const UpdateForum = lazy(() => import("../views/Forums/UpdateForums"));
+const UpdateReclamation = lazy(() =>
+  import("../views/Reclamation/ReclamationUpdate")
+);
+const AddEvent = lazy(() => import("../views/Event/EventForm"));
+const UpdateEvent = lazy(() => import("../views/Event/EventUpdate"));
 /*****Routes******/
 
 const ThemeRoutes = [
@@ -40,7 +44,7 @@ const ThemeRoutes = [
     element: <FullLayout />,
     children: [
       { path: "/", element: <Navigate to="/starter" /> },
-     
+
       { path: "/starter", exact: true, element: <Starter /> },
       { path: "/courses", exact: true, element: <CoursesPage /> },
       { path: "/forums", exact: true, element: <ForumsPage /> },
@@ -62,8 +66,18 @@ const ThemeRoutes = [
       { path: "/breadcrumbs", exact: true, element: <Breadcrumbs /> },
       { path: "/addReclamation", exact: true, element: <AddReclamation /> },
       { path: "/addForums", exact: true, element: <AddForums /> },
-      { path: "/updateForum/:id", exact: true, element: <UpdateForum/> },
-      { path: "/updateReclamation/:id", exact: true, element: <UpdateReclamation/> },
+      { path: "/updateForum/:id", exact: true, element: <UpdateForum /> },
+      {
+        path: "/updateReclamation/:id",
+        exact: true,
+        element: <UpdateReclamation />,
+      },
+      { path: "/addEvent", exact: true, element: <AddEvent /> },
+      {
+        path: "/updateEvent/:id",
+        exact: true,
+        element: <UpdateEvent />,
+      },
     ],
   },
 ];
