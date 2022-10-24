@@ -1,5 +1,20 @@
-import { Col, Row } from "reactstrap";
-import ProjectTables from "../components/dashboard/ProjectTable";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import {
+  Col,
+  Row,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  FormText,
+} from "reactstrap";
 
 import Blog from "../components/dashboard/Blog";
 import bg1 from "../assets/images/bg/bg1.jpg";
@@ -44,30 +59,38 @@ const BlogData = [
 ];
 
 const EventsPage = () => {
+  const [events, setEvents] = useState([]);
+  const [deleted, setDeleted] = useState(0);
+  const getAll = () => {
+    axios.get("http://localhost:8051/events/all").then((response) => {
+      setEvents(response.data);
+    });
+  };
+  const deleteFun = () => {
+    setDeleted(deleted + 1);
+  };
+  useEffect(() => {
+    getAll();
+  }, [deleted]);
+
+  const [modal, setModal] = React.useState(false);
+
+  const toggle = () => {
+    setModal(!modal);
+  };
+
   return (
     <div>
-      {/***Top Cards***/}
-
-      {/***Table ***/}
       <Row>
         <Col lg="12">
-          <EventTable />
+          <EventTable events={events} deleteFun={deleteFun}></EventTable>
         </Col>
       </Row>
-      {/***Blog Cards***/}
-      <Row>
-        {BlogData.map((blg, index) => (
-          <Col sm="6" lg="6" xl="3" key={index}>
-            <Blog
-              image={blg.image}
-              title={blg.title}
-              subtitle={blg.subtitle}
-              text={blg.description}
-              color={blg.btnbg}
-            />
-          </Col>
-        ))}
-      </Row>
+      <Link to={"/addEvent"}>
+        <Button className="btn" outline color="info">
+          <i class="bi bi-plus"></i>Add Event
+        </Button>
+      </Link>
     </div>
   );
 };

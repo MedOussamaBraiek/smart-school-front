@@ -1,6 +1,6 @@
 import React from "react";
-import { Col, Row } from "reactstrap";
-import ProjectTables from "../components/dashboard/ProjectTable";
+import { Col, Row, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+
 
 
 import Blog from "../components/dashboard/Blog";
@@ -47,28 +47,135 @@ const BlogData = [
 
 const CoursePage = () => {
 
-  
+  const baseUlr = "http://localhost:8051/courses/all"
+
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin' : '*' }
+};
+
+  const [courses, setCourses] = React.useState(null);
+
+  const [modal, setModal] = React.useState(false);
+
+  const [formData, setData] = React.useState({ name: "", description: "",category: "" });
+  const [name, setName] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [category, setCategory] = React.useState("");
+
+  React.useEffect(() => {
+    fetch(baseUlr)
+     .then((response) => response.json())
+     .then(res => {console.log(res); setCourses(res)})
+   }, []);
+
+  const toggle = () => {
+    setModal(!modal);
+  }
+
+  const handleChangeName = (e) => {
+    setName(e.target.value);
+    setData({ ...formData, name: e.target.value });
+  };
+  const handleChangeDescription = (e) => {
+    setDescription(e.target.value);
+    setData({ ...formData, description: e.target.value });
+  };
+  const handleChangeCategory = (e) => {
+    setCategory(e.target.value);
+    setData({ ...formData, category: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const course = { name, description, category };
+
+    fetch("http://localhost:8051/courses/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(course),
+    }).then(async (res) => {
+      console.log("new course added");
+    });
+  }
 
   return (
     <div>
       {/***Top Cards***/}
 
-      {/***Table ***/}
-      <Row>
-        <Col lg="12">
-          <ProjectTables />
-        </Col>
-      </Row>
+
+     <div className="mt-2 mb-4">
+        <Button color="primary" onClick={toggle} >Add Course</Button>
+        <Modal isOpen={modal} toggle={toggle} >
+          <ModalHeader toggle={toggle}>Add Course</ModalHeader>
+          <ModalBody>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(e);
+            }}
+          >
+              <FormGroup>
+                <Label for="name">Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  placeholder="Course name"
+                  type="text"
+                  value={name}
+                  onChange={handleChangeName}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="description">Description</Label>
+                <Input
+                  id="description"
+                  name="description"
+                  placeholder="Description"
+                  type="textarea"
+                  value={description}
+                  onChange={handleChangeDescription}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="name">Category</Label>
+                <Input
+                  id="category"
+                  name="category"
+                  placeholder="Category"
+                  type="text"
+                  value={category}
+                  onChange={handleChangeCategory}
+                />
+              </FormGroup>
+             
+              {/* <Button>Submit</Button> */}
+              <ModalFooter>
+                <Button color="primary" type="submit" onClick={toggle}>Submit</Button>
+                <Button color="danger" onClick={toggle}>Cancel</Button>
+              </ModalFooter>
+            </form>
+          </ModalBody>
+        </Modal>
+      </div>
+
       {/***Blog Cards***/}
       <Row>
-        {BlogData.map((blg, index) => (
+        {/* {BlogData.map((blg, index) => ( */}
+        {courses && courses.map((course, index) => (
           <Col sm="6" lg="6" xl="3" key={index}>
+            {/* {courses && courses.map((course,index) => {
+              
+            })} */}
             <Blog
-              image={blg.image}
-              title={blg.title}
-              subtitle={blg.subtitle}
-              text={blg.description}
-              color={blg.btnbg}
+              image={bg1}
+              title={"Name : " + course.name}
+              subtitle={"Subtitle : " + course.description}
+              text={"Category : " + course.category}
+              color={"primary"}
             />
           </Col>
         ))}

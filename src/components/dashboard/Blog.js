@@ -14,7 +14,7 @@ const Blog = (props) => {
       <CardImg alt="Card image cap" src={props.image} />
       <CardBody className="p-4">
         <CardTitle tag="h5">{props.title}</CardTitle>
-        <CardSubtitle>{props.subtitle}</CardSubtitle>
+        <CardSubtitle className="mt-2 ">{props.subtitle}</CardSubtitle>
         <CardText className="mt-3">{props.text}</CardText>
         <Button color={props.color}>Read More</Button>
       </CardBody>

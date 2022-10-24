@@ -1,74 +1,28 @@
-import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
-import user1 from "../../assets/images/users/user1.jpg";
-import user2 from "../../assets/images/users/user2.jpg";
-import user3 from "../../assets/images/users/user3.jpg";
-import user4 from "../../assets/images/users/user4.jpg";
-import user5 from "../../assets/images/users/user5.jpg";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
-
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  Table,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalFooter,
+  CardText,
+} from "reactstrap";
 const baseURL = "http://localhost:8051/events/";
 
-const tableData = [
-  {
-    avatar: user1,
-    name: "Alaa BenFradj",
-    email: "hgover@gmail.com",
-    project: "Flexy React",
-    status: "pending",
-    weeks: "35",
-    budget: "95K",
-  },
-  {
-    avatar: user2,
-    name: "Hanna Gover",
-    email: "hgover@gmail.com",
-    project: "Lading pro React",
-    status: "done",
-    weeks: "35",
-    budget: "95K",
-  },
-  {
-    avatar: user3,
-    name: "Hanna Gover",
-    email: "hgover@gmail.com",
-    project: "Elite React",
-    status: "holt",
-    weeks: "35",
-    budget: "95K",
-  },
-  {
-    avatar: user4,
-    name: "Hanna Gover",
-    email: "hgover@gmail.com",
-    project: "Flexy React",
-    status: "pending",
-    weeks: "35",
-    budget: "95K",
-  },
-  {
-    avatar: user5,
-    name: "Hanna Gover",
-    email: "hgover@gmail.com",
-    project: "Ample React",
-    status: "done",
-    weeks: "35",
-    budget: "95K",
-  },
-];
+const EventTable = (props) => {
+  const { events, deleteFun } = props;
 
-const EventTable = () => {
-  const [events, setEvents] = useState([]);
-  const getAll = async () => {
-    await axios
-      .get(baseURL + "all")
-      .then((response) => {
-        setEvents(response.data);
-        console.log(events);
-      })
-      .catch(console.error("something went wrong !"));
+  const deleteEvent = (id) => {
+    axios.delete(baseURL + `delete/${id}`).then((res) => {
+      deleteFun();
+    });
   };
-
   const getById = (id) => {
     axios
       .get(baseURL + id)
@@ -79,9 +33,6 @@ const EventTable = () => {
         console.log(error.message);
       });
   };
-  useEffect(() => {
-    getAll();
-  }, []);
 
   return (
     <div>
@@ -95,11 +46,12 @@ const EventTable = () => {
           <Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>
-                <th>Team Lead</th>
-                <th>Project</th>
-                <th>Status</th>
-                <th>Weeks</th>
-                <th>Budget</th>
+                <th>Owner</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Title</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -107,34 +59,52 @@ const EventTable = () => {
                 <tr key={index} className="border-top">
                   <td>
                     <div className="d-flex align-items-center p-2">
-                      <img
-                        src={tableData[3].avatar}
-                        className="rounded-circle"
-                        alt="avatar"
-                        width="45"
-                        height="45"
-                      />
-
                       <div className="ms-3">
-                        <h6 className="mb-0">
-                          {tdata.owner != undefined ? tdata.owner : "for All"}
-                        </h6>
-                        <span className="text-muted">{"tdata.email"}</span>
+                        <h6 className="mb-0">{tdata?.owner}</h6>
+                        <span className="text-muted">{"email"}</span>
                       </div>
                     </div>
                   </td>
-                  <td>{tdata.description}</td>
+                  <td>{tdata?.description}</td>
                   <td>
-                    {tdata.status === "pending" ? (
-                      <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>
-                    ) : tdata.status === "holt" ? (
-                      <span className="p-2 bg-warning rounded-circle d-inline-block ms-3"></span>
+                    {tdata?.type === "SPORT" ? (
+                      <span className="p-2 bg-danger rounded-circle d-inline-block ms-3">
+                        SPORT
+                      </span>
+                    ) : tdata?.type === "FOOD" ? (
+                      <span className="p-2 bg-warning rounded-circle d-inline-block ms-3">
+                        FOOD
+                      </span>
                     ) : (
-                      <span className="p-2 bg-success rounded-circle d-inline-block ms-3"></span>
+                      <span className="p-2 bg-success rounded-circle d-inline-block ms-3">
+                        MUSIC
+                      </span>
                     )}
                   </td>
-                  <td>{tdata.type != undefined ? tdata.type : "Random"}</td>
-                  <td>{tdata.title}</td>
+                  <td>{tdata?.eventDate}</td>
+                  <td>{tdata?.title}</td>
+                  <td>
+                    <div className="d-flex justify-content-evenly">
+                      <Link to={`/updateEvent/${tdata.id}`}>
+                        <Button className="btn" outline color="info">
+                          {" "}
+                          <i class="bi bi-pencil-fill"></i>
+                        </Button>
+                      </Link>
+                      <Button
+                        className="btn"
+                        onClick={() => {
+                          deleteEvent(tdata.id);
+                          console.log(tdata.id);
+                        }}
+                        outline
+                        color="danger"
+                      >
+                        {" "}
+                        <i class="bi bi-trash"></i>
+                      </Button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

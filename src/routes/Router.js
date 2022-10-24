@@ -1,3 +1,4 @@
+//router
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 
@@ -7,6 +8,8 @@ const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
 /***** Pages ****/
 
 const Starter = lazy(() => import("../views/Starter.js"));
+const LoginPage = lazy(() => import("../views/Login.js"));
+const RegisterPage = lazy(() => import("../views/Register.js"));
 const UsersPage = lazy(() => import("../views/UsersPage.js"));
 const CoursesPage = lazy(() => import("../views/CoursesPage.js"));
 const ClubsPage = lazy(() => import("../views/ClubsPage.js"));
@@ -22,7 +25,14 @@ const Grid = lazy(() => import("../views/ui/Grid"));
 const Tables = lazy(() => import("../views/ui/Tables"));
 const Forms = lazy(() => import("../views/ui/Forms"));
 const Breadcrumbs = lazy(() => import("../views/ui/Breadcrumbs"));
-
+const AddReclamation = lazy(() =>
+  import("../views/Reclamation/ReclamationForm")
+);
+const UpdateReclamation = lazy(() =>
+  import("../views/Reclamation/ReclamationUpdate")
+);
+const AddEvent = lazy(() => import("../views/Event/EventForm"));
+const UpdateEvent = lazy(() => import("../views/Event/EventUpdate"));
 /*****Routes******/
 
 const ThemeRoutes = [
@@ -46,7 +56,21 @@ const ThemeRoutes = [
       { path: "/grid", exact: true, element: <Grid /> },
       { path: "/table", exact: true, element: <Tables /> },
       { path: "/forms", exact: true, element: <Forms /> },
+      { path: "/login", exact: true, element: <LoginPage /> },
+      { path: "/register", exact: true, element: <RegisterPage /> },
       { path: "/breadcrumbs", exact: true, element: <Breadcrumbs /> },
+      { path: "/addReclamation", exact: true, element: <AddReclamation /> },
+      {
+        path: "/updateReclamation/:id",
+        exact: true,
+        element: <UpdateReclamation />,
+      },
+      { path: "/addEvent", exact: true, element: <AddEvent /> },
+      {
+        path: "/updateEvent/:id",
+        exact: true,
+        element: <UpdateEvent />,
+      },
     ],
   },
 ];
