@@ -28,8 +28,10 @@ const ForumsTable = (props) => {
   const [idForum, setIdForum] = useState("");
   const [user, setUser] = useState("");
 
-
-
+  useEffect(() => {
+    const items = JSON.parse(localStorage.getItem("user"));
+    setUser(items.sub);
+  }, []);
 
   const getForumPosts = (posts) => {
     setPosts(posts);
@@ -74,13 +76,10 @@ const ForumsTable = (props) => {
     validateOnChange: false,
     validateOnBlur: false,
   });
- 
-
 
   return (
     <>
       <div>
-       
         <Card>
           <CardBody>
             <CardTitle tag="h5">Forums</CardTitle>
@@ -128,13 +127,14 @@ const ForumsTable = (props) => {
                         <div className="d-flex justify-content-evenly">
                           <Link
                             to={
-                              user === tdata.createdBy.userName
+                              user == tdata.createdBy.userName
                                 ? `/updateForum/${tdata.id}`
                                 : "/forums"
                             }
                           >
+                         
                             <Button
-                              disabled={user !== tdata.createdBy.userName}
+                              disabled={user != tdata.createdBy.userName}
                               className="btn"
                               outline
                               color="info"
@@ -143,7 +143,7 @@ const ForumsTable = (props) => {
                             </Button>
                           </Link>
                           <Button
-                            disabled={user !== tdata.createdBy.userName}
+                            disabled={user != tdata.createdBy.userName}
                             className="btn"
                             onClick={() => {
                               handleDeleteForum(tdata.id);
