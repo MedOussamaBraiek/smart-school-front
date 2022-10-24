@@ -17,14 +17,13 @@ const ReclamationsPage = () => {
   const [reclamations, setReclamations] = React.useState([]);
   const [deleted, setDeleted] = useState(0);
   const [filter, setfilter] = useState({
-    title: "",
-    startDate: "",
-    endDate: "",
+   
   });
   const [options, setoptions] = useState({ title: [] });
   const handleChangeFilter = (e) => {
     setfilter({ ...filter, [e.target.name]: e.target.value });
   };
+  console.log(filter)
   const getall = () => {
     axios.get(`http://localhost:8051/reclamations/all`).then((res) => {
       setReclamations(res.data);
@@ -59,9 +58,9 @@ const ReclamationsPage = () => {
       {/***Top Cards***/}
 
       {/***Table ***/}
-      <Container fluid="lg">
+      <Container fluid="xl">
         <Row>
-          <Col md={4}>
+          <Col md={3}>
             <FormGroup>
               <Label>Title</Label>
               <Input
@@ -79,7 +78,7 @@ const ReclamationsPage = () => {
               </Input>
             </FormGroup>
           </Col>
-          <Col md={4}>
+          <Col md={3}>
             <FormGroup>
               <Label>StartDate</Label>
               <Input
@@ -91,7 +90,7 @@ const ReclamationsPage = () => {
               />
             </FormGroup>
           </Col>
-          <Col md={4}>
+          <Col md={3}>
             <FormGroup>
               <Label>EndDate</Label>
               <Input
@@ -102,7 +101,20 @@ const ReclamationsPage = () => {
                 onChange={handleChangeFilter}
               />
             </FormGroup>
+            
           </Col>
+          <Col md={3} className="d-flex justify-content-evenly align-items-center">
+            
+                <FormGroup className="d-flex" >
+                  <Label> active</Label>
+                  <Input name="status" type="radio" value={true} onChange={handleChangeFilter} />{" "}
+                </FormGroup>
+                <FormGroup className="d-flex" >
+                  <Label>Inactive</Label>
+                  <Input name="status" type="radio" value={false} onChange={handleChangeFilter} />{" "}
+                </FormGroup>
+               
+               </Col>
         </Row>
       </Container>
       <Row>
