@@ -1,3 +1,4 @@
+import { isDisabled } from "@testing-library/user-event/dist/utils";
 import axios from "axios";
 import { useFormik } from "formik";
 
@@ -25,6 +26,11 @@ const ForumsTable = (props) => {
   const [open, setOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const [idForum, setIdForum] = useState("");
+  const [user, setUser] = useState("");
+
+
+
+
   const getForumPosts = (posts) => {
     setPosts(posts);
   };
@@ -33,12 +39,15 @@ const ForumsTable = (props) => {
   };
 
   const handleDeleteForum = (id) => {
-    axios
-      .delete(`http://localhost:8051/forums/${id}`)
-      .then((res) => {
-
-        increment();
-      });
+    const config = {
+      headers: {
+        Authorization:
+          `Bearer ` + window.localStorage.getItem("token").slice(1, -1),
+      },
+    };
+    axios.delete(`http://localhost:8051/forums/${id}`, config).then((res) => {
+      increment();
+    });
   };
   const formik = useFormik({
     initialValues: {
@@ -58,7 +67,6 @@ const ForumsTable = (props) => {
         .put(`http://localhost:8051/forums/forum/${idForum}`, values, config)
         .then((res) => {
           if (res.data) {
-            console.log(res.data);
             setPosts(res.data.posts);
           }
         });
@@ -66,10 +74,13 @@ const ForumsTable = (props) => {
     validateOnChange: false,
     validateOnBlur: false,
   });
+ 
+
 
   return (
     <>
       <div>
+       
         <Card>
           <CardBody>
             <CardTitle tag="h5">Forums</CardTitle>
@@ -115,15 +126,27 @@ const ForumsTable = (props) => {
                       </td>
                       <td>
                         <div className="d-flex justify-content-evenly">
-                          <Link to={`/updateForum/${tdata.id}`}>
-                            <Button className="btn" outline color="info">
+                          <Link
+                            to={
+                              user === tdata.createdBy.userName
+                                ? `/updateForum/${tdata.id}`
+                                : "/forums"
+                            }
+                          >
+                            <Button
+                              disabled={user !== tdata.createdBy.userName}
+                              className="btn"
+                              outline
+                              color="info"
+                            >
                               <i className="bi bi-pencil-fill"></i>
                             </Button>
                           </Link>
                           <Button
+                            disabled={user !== tdata.createdBy.userName}
                             className="btn"
                             onClick={() => {
-                                handleDeleteForum(tdata.id);
+                              handleDeleteForum(tdata.id);
                             }}
                             outline
                             color="danger"

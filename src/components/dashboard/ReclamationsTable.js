@@ -1,6 +1,5 @@
-
 import axios from "axios";
-import {  useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -14,8 +13,6 @@ import {
   ModalFooter,
   CardText,
 } from "reactstrap";
-
-
 
 const ReclamationsTable = (props) => {
   const { reclamations, increment } = props;
@@ -38,6 +35,7 @@ const ReclamationsTable = (props) => {
         increment();
       });
   };
+
 
   return (
     <>

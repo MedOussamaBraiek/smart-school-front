@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { Link } from "react-router-dom";
-
+import jwt_decode from "jwt-decode";
 import {
   Card,
   Row,
@@ -32,12 +32,11 @@ export default function Login() {
     params.append("password", credentilas.password);
     axios.post("http://localhost:8051/api/login", params).then((response) => {
       console.log(response.data.access_token);
+      var decoded = jwt_decode(response.data.access_token);
+      localStorage.setItem("user", JSON.stringify(decoded));
       localStorage.setItem("token", JSON.stringify(response.data.access_token));
     });
   };
-
- 
-
 
   return (
     <Row>
