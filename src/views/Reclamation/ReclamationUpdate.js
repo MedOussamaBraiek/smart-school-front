@@ -24,13 +24,13 @@ const ReclamationUpdate = () => {
       setoptions(res.data);
     });
   }, []);
-  const  [Reclamation,setReclamation]=useState({});
+  const [Reclamation, setReclamation] = useState({});
   useEffect(() => {
-    axios.get(`http://localhost:8051/reclamations/${id}`).then((res)=>{
+    axios.get(`http://localhost:8051/reclamations/${id}`).then((res) => {
       setReclamation(res.data);
     });
   }, []);
-  
+
   const formik = useFormik({
     initialValues: {
       title: Reclamation.title,
@@ -46,11 +46,9 @@ const ReclamationUpdate = () => {
             Navigate("/reclamations");
           }
         });
-        
     },
     validateOnChange: false,
     validateOnBlur: false,
-
   });
   return (
     <Row>
@@ -64,7 +62,7 @@ const ReclamationUpdate = () => {
             Update Reclamation
           </CardTitle>
           <CardBody>
-            <Form onSubmit={formik.handleSubmit} >
+            <Form onSubmit={formik.handleSubmit}>
               <FormGroup>
                 <Label for="exampleEmail">Title</Label>
                 <Input
@@ -74,7 +72,7 @@ const ReclamationUpdate = () => {
                   type="text"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  value={formik.initialValues.title}
+                  value={formik.values.title}
                 />
               </FormGroup>
               <FormGroup>
@@ -92,17 +90,19 @@ const ReclamationUpdate = () => {
               <FormGroup>
                 <Label for="eventId">Event</Label>
                 <Input
-                    id="eventId"
-                    name="eventId"
-                    type="select"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    value={formik.values.eventId}
-                  >
-                    {options.map((event, index) => (
-                      <option key={index} value={event.id}>{event.title}</option>
-                    ))}
-                  </Input>
+                  id="eventId"
+                  name="eventId"
+                  type="select"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.eventId}
+                >
+                  {options.map((event, index) => (
+                    <option key={index} value={event.id}>
+                      {event.title}
+                    </option>
+                  ))}
+                </Input>
               </FormGroup>
               <FormGroup>
                 <Label for="content">Content</Label>
@@ -116,10 +116,10 @@ const ReclamationUpdate = () => {
                   value={formik.values.content}
                 />
               </FormGroup>
-             
-              <Button className="btn" outline color="info" type="submit">Update Reclamation</Button>
-              
-              
+
+              <Button className="btn" outline color="info" type="submit">
+                Update Reclamation
+              </Button>
             </Form>
           </CardBody>
         </Card>

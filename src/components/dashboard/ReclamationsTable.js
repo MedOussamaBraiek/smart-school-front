@@ -107,7 +107,7 @@ const ReclamationsTable = (props) => {
                         <Link to={`/updateReclamation/${tdata.id}`}>
                           <Button className="btn" outline color="info">
                             {" "}
-                            <i class="bi bi-pencil-fill"></i>
+                            <i className="bi bi-pencil-fill"></i>
                           </Button>
                         </Link>
                         <Button
@@ -119,7 +119,7 @@ const ReclamationsTable = (props) => {
                           color="danger"
                         >
                           {" "}
-                          <i class="bi bi-trash"></i>
+                          <i className="bi bi-trash"></i>
                         </Button>
                       </div>
                     </td>
