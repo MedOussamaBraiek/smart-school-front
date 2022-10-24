@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import {
   Navbar,
   Collapse,
@@ -96,10 +97,16 @@ const Header = () => {
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem header>Info</DropdownItem>
+            <Link to="/login">
+              <DropdownItem>Login</DropdownItem>
+            </Link>
+            <Link to="/register">
+              <DropdownItem>register</DropdownItem>
+            </Link>
             <DropdownItem>My Account</DropdownItem>
             <DropdownItem>Edit Profile</DropdownItem>
             <DropdownItem divider />
-            <DropdownItem>My Balance</DropdownItem>
+
             <DropdownItem>Inbox</DropdownItem>
             <DropdownItem>Logout</DropdownItem>
           </DropdownMenu>

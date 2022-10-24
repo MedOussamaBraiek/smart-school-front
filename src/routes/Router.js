@@ -7,6 +7,8 @@ const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
 /***** Pages ****/
 
 const Starter = lazy(() => import("../views/Starter.js"));
+const LoginPage = lazy(() => import("../views/Login.js"));
+const RegisterPage = lazy(() => import("../views/Register.js"));
 const UsersPage = lazy(() => import("../views/UsersPage.js"));
 const CoursesPage = lazy(() => import("../views/CoursesPage.js"));
 const ClubsPage = lazy(() => import("../views/ClubsPage.js"));
@@ -46,6 +48,8 @@ const ThemeRoutes = [
       { path: "/grid", exact: true, element: <Grid /> },
       { path: "/table", exact: true, element: <Tables /> },
       { path: "/forms", exact: true, element: <Forms /> },
+      { path: "/login", exact: true, element: <LoginPage /> },
+      { path: "/register", exact: true, element: <RegisterPage /> },
       { path: "/breadcrumbs", exact: true, element: <Breadcrumbs /> },
     ],
   },
