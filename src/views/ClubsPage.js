@@ -6,6 +6,8 @@ import bg1 from "../assets/images/bg/bg1.jpg";
 import bg2 from "../assets/images/bg/bg2.jpg";
 import bg3 from "../assets/images/bg/bg3.jpg";
 import bg4 from "../assets/images/bg/bg4.jpg";
+import axios from "axios";
+import ClubCard from "../components/dashboard/ClubCard";
 
 const BlogData = [
   {
@@ -50,114 +52,230 @@ const ClubsPage = () => {
   const toggle = () => {
     setModal(!modal);
   }
+
+  const baseUlr = "http://localhost:8051/clubs";
+
+  const [clubs, setClubs] = React.useState(null);
+
+  const getClubs = () => {
+    fetch(baseUlr)
+    .then((response) => response.json())
+    .then(res =>  setClubs(res))
+  }
+
+  React.useEffect(() => {
+    getClubs();
+   }, []);
+
+   const [formData, setData] = React.useState({ name: "", description: "",category: "" });
+   const [name, setName] = React.useState("");
+   const [description, setDescription] = React.useState("");
+   const [location, setLocation] = React.useState("");
+   const [email, setEmail] = React.useState("");
+   const [website, setWebsite] = React.useState("");
+   const [phone, setPhone] = React.useState("");
+   const [date, setDate] = React.useState(null);
+
+   const handleChangeName = (e) => {
+    setName(e.target.value);
+    setData({ ...formData, name: e.target.value });
+  };
+  const handleChangeDescription = (e) => {
+    setDescription(e.target.value);
+    setData({ ...formData, description: e.target.value });
+  };
+  const handleChangeLocation = (e) => {
+    setLocation(e.target.value);
+    setData({ ...formData, location: e.target.value });
+  };
+  const handleChangeEmail = (e) => {
+    setEmail(e.target.value);
+    setData({ ...formData, email: e.target.value });
+  };
+  const handleChangeWebsite = (e) => {
+    setWebsite(e.target.value);
+    setData({ ...formData, website: e.target.value });
+  };
+  const handleChangeDate = (e) => {
+    setDate(e.target.value);
+    setData({ ...formData, date: e.target.value });
+  };
+  const handleChangePhone = (e) => {
+    setPhone(e.target.value);
+    setData({ ...formData, phone: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const club = { name, description, location, email, website, phone,date };
+
+    const customConfig = {
+      headers: {
+      'Content-Type': 'application/json',
+      // 'Access-Control-Allow-Origin': '*'
+      }
+  };
+
+
+    axios.post('http://localhost:8051/clubs', 
+    club, customConfig)
+    .then(response => console.log(response));
+  }
+
+  const [search, setSearch] = React.useState("");
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+
+    if (e.target.value) {
+      setClubs(
+        clubs.filter((club) =>
+          club.name.toLowerCase().startsWith(e.target.value.toLowerCase())
+        )
+      );
+    } else getClubs();
+  };
+
   return (
     <div>
       {/***Top Cards***/}
 
-      <div className="mt-2 mb-4">
-        <Button color="primary" onClick={toggle} >Add Club</Button>
+    <div className="mt-2 mb-4">
+      <div className="d-flex justify-content-between">
+        <Button color="dark" onClick={toggle} >Add Club</Button>
+        <div className="search__input d-flex">
+                  <Input
+                    type="text"
+                    placeholder="Search Club..."
+                    value={search}
+                    onChange={handleSearch}
+                  />
+                   <span className="mt-1" style={{"transform" : "translateX(-30px)"}}>
+                    <svg
+                      width="15"
+                      height="16"
+                      viewBox="0 0 15 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13.6767 14.5454L11.0909 11.9597M13.0779 7.4935C13.0779 10.8287 10.3742 13.5324 7.03894 13.5324C3.70373 13.5324 1 10.8287 1 7.4935C1 4.15828 3.70373 1.45456 7.03894 1.45456C10.3742 1.45456 13.0779 4.15828 13.0779 7.4935Z"
+                        stroke="#4FD1C5"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </span>
+          </div>
+        </div>
         <Modal isOpen={modal} toggle={toggle} >
           <ModalHeader toggle={toggle}>Add Club</ModalHeader>
           <ModalBody>
-          <Form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(e);
+            }}
+          >
               <FormGroup>
-                <Label for="exampleEmail">Email</Label>
+                <Label for="name">Name</Label>
                 <Input
-                  id="exampleEmail"
+                  id="name"
+                  name="name"
+                  placeholder="Course name"
+                  type="text"
+                  value={name}
+                  onChange={handleChangeName}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="description">Description</Label>
+                <Input
+                  id="description"
+                  name="description"
+                  placeholder="Description"
+                  type="textarea"
+                  value={description}
+                  onChange={handleChangeDescription}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="name">Location</Label>
+                <Input
+                  id="location"
+                  name="location"
+                  placeholder="Location"
+                  type="text"
+                  value={location}
+                  onChange={handleChangeLocation}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="name">Email</Label>
+                <Input
+                  id="email"
                   name="email"
-                  placeholder="with a placeholder"
-                  type="email"
+                  placeholder="Email"
+                  type="text"
+                  value={email}
+                  onChange={handleChangeEmail}
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="examplePassword">Password</Label>
+                <Label for="name">Website</Label>
                 <Input
-                  id="examplePassword"
-                  name="password"
-                  placeholder="password placeholder"
-                  type="password"
+                  id="website"
+                  name="website"
+                  placeholder="Website"
+                  type="text"
+                  value={website}
+                  onChange={handleChangeWebsite}
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="exampleSelect">Select</Label>
-                <Input id="exampleSelect" name="select" type="select">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="exampleSelectMulti">Select Multiple</Label>
+                <Label for="name">Phone</Label>
                 <Input
-                  id="exampleSelectMulti"
-                  multiple
-                  name="selectMulti"
-                  type="select"
-                >
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </Input>
+                  id="phone"
+                  name="phone"
+                  placeholder="Phone"
+                  type="text"
+                  value={phone}
+                  onChange={handleChangePhone}
+                />
               </FormGroup>
               <FormGroup>
-                <Label for="exampleText">Text Area</Label>
-                <Input id="exampleText" name="text" type="textarea" />
+                <Label for="name">Date</Label>
+                <Input
+                  id="date"
+                  name="date"
+                  placeholder="Date"
+                  type="date"
+                  value={date}
+                  onChange={handleChangeDate}
+                />
               </FormGroup>
-              <FormGroup>
-                <Label for="exampleFile">File</Label>
-                <Input id="exampleFile" name="file" type="file" />
-                <FormText>
-                  This is some placeholder block-level help text for the above
-                  input. It's a bit lighter and easily wraps to a new line.
-                </FormText>
-              </FormGroup>
-              <FormGroup tag="fieldset">
-                <legend>Radio Buttons</legend>
-                <FormGroup check>
-                  <Input name="radio1" type="radio" />{" "}
-                  <Label check>
-                    Option one is this and that—be sure to include why it's
-                    great
-                  </Label>
-                </FormGroup>
-                <FormGroup check>
-                  <Input name="radio1" type="radio" />{" "}
-                  <Label check>
-                    Option two can be something else and selecting it will
-                    deselect option one
-                  </Label>
-                </FormGroup>
-                <FormGroup check disabled>
-                  <Input disabled name="radio1" type="radio" />{" "}
-                  <Label check>Option three is disabled</Label>
-                </FormGroup>
-              </FormGroup>
-              <FormGroup check>
-                <Input type="checkbox" /> <Label check>Check me out</Label>
-              </FormGroup>
-              <Button>Submit</Button>
-            </Form>
+             
+              {/* <Button>Submit</Button> */}
+              <ModalFooter>
+                <Button color="primary" type="submit" onClick={toggle}>Submit</Button>
+                <Button color="danger" onClick={toggle}>Cancel</Button>
+              </ModalFooter>
+            </form>
           </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={toggle}>Do Something</Button>{' '}
-            <Button color="secondary" onClick={toggle}>Cancel</Button>
-          </ModalFooter>
         </Modal>
       </div>
       {/***Blog Cards***/}
       <Row>
-        {BlogData.map((blg, index) => (
+        {clubs && clubs.map((club, index) => (
           <Col sm="6" lg="6" xl="3" key={index}>
-            <Blog
-              image={blg.image}
-              title={blg.title}
-              subtitle={blg.subtitle}
-              text={blg.description}
-              color={blg.btnbg}
+            <ClubCard
+              image={bg2}
+              name={club.name}
+              description={club.description}
+              location={club.location}
+              color={club.btnbg}
+              id={club.id}
             />
           </Col>
         ))}

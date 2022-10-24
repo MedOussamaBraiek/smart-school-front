@@ -11,12 +11,11 @@ import {
 import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import React from 'react';
 
-const Blog = (props) => {
+const ClubCard = (props) => {
 
-  const deleteCourse = () => {
-    //const id = "6355a85b2599f273351c738b";
+  const deleteClub = () => {
     console.log(props.id)
-    axios.delete(`http://localhost:8051/courses/${props.id}`)
+    axios.delete(`http://localhost:8051/clubs/${props.id}`)
     .then(res => console.log(res));
     toggle2();
   }
@@ -36,10 +35,11 @@ const Blog = (props) => {
   const [formData, setData] = React.useState({ name: "", description: "",category: "" });
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
-  const [category, setCategory] = React.useState("");
-  // const handleChangeName = (e) => {
-  //   setName(e.target.value);
-  // };
+  const [location, setLocation] = React.useState("");
+   const [email, setEmail] = React.useState("");
+   const [website, setWebsite] = React.useState("");
+   const [phone, setPhone] = React.useState("");
+   const [date, setDate] = React.useState(null);
 
   const handleChangeName = (e) => {
     setName(e.target.value);
@@ -49,25 +49,36 @@ const Blog = (props) => {
     setDescription(e.target.value);
     setData({ ...formData, description: e.target.value });
   };
-  const handleChangeCategory = (e) => {
-    if(e.target.value){
-      setCategory(e.target.value);
-      setData({ ...formData, category: e.target.value });
-    }
-    else
-      setCategory(props.category);
-      setData({ ...formData, category: props.category });  
+  const handleChangeLocation = (e) => {
+    setLocation(e.target.value);
+    setData({ ...formData, location: e.target.value });
+  };
+  const handleChangeEmail = (e) => {
+    setEmail(e.target.value);
+    setData({ ...formData, email: e.target.value });
+  };
+  const handleChangeWebsite = (e) => {
+    setWebsite(e.target.value);
+    setData({ ...formData, website: e.target.value });
+  };
+  const handleChangeDate = (e) => {
+    setDate(e.target.value);
+    setData({ ...formData, date: e.target.value });
+  };
+  const handleChangePhone = (e) => {
+    setPhone(e.target.value);
+    setData({ ...formData, phone: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const coursee = { name, description, category };
+    const clubss = { name, description, location, email,website, phone, date  };
     const idd = {
       id : props.id
     }
-    const course = {...coursee, ...idd};
-    console.log(course)
+    const clubs = {...clubss, ...idd};
+    console.log(clubs)
     const customConfig = {
       headers: {
       'Content-Type': 'application/json',
@@ -75,8 +86,8 @@ const Blog = (props) => {
       }
   };
   
-    axios.put(`http://localhost:8051/courses`, 
-    course, customConfig)
+    axios.put(`http://localhost:8051/clubs`, 
+    clubs, customConfig)
     .then(response => console.log(response));
   }
   
@@ -102,12 +113,12 @@ const Blog = (props) => {
         </Modal>
 
         <Modal isOpen={modal2} toggle={toggle2} >
-          <ModalHeader toggle={toggle2}>Do you really want to delete this Course ?</ModalHeader>
+          <ModalHeader toggle={toggle2}>Do you really want to delete this Club ?</ModalHeader>
           <ModalBody>
           <CardImg alt="Card image cap" src={props.image} />
 
               <ModalFooter>
-                <Button color="danger" onClick={deleteCourse}>Yes</Button>
+                <Button color="danger" onClick={deleteClub}>Yes</Button>
                 <Button color="primary" onClick={toggle2}>No</Button>
               </ModalFooter>
           </ModalBody>
@@ -145,14 +156,47 @@ const Blog = (props) => {
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="name">Category</Label>
+                <Label for="name">Location</Label>
                 <Input
-                  id="category"
-                  name="category"
-                  placeholder={props.category}
+                  id="location"
+                  name="location"
+                  placeholder={props.location}
                   type="text"
-                  value={category}
-                  onChange={handleChangeCategory}
+                  value={location}
+                  onChange={handleChangeLocation}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="name">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  placeholder={props.email}
+                  type="text"
+                  value={email}
+                  onChange={handleChangeEmail}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="name">Website</Label>
+                <Input
+                  id="website"
+                  name="website"
+                  placeholder={props.website}
+                  type="text"
+                  value={website}
+                  onChange={handleChangeWebsite}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="name">Phone</Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  placeholder={props.phone}
+                  type="text"
+                  value={phone}
+                  onChange={handleChangePhone}
                 />
               </FormGroup>
              
@@ -171,9 +215,9 @@ const Blog = (props) => {
       <CardBody className="p-4 pt-3">
         <CardTitle tag="h5">{props.name}</CardTitle>
         {/* <CardSubtitle className="mt-2 ">{props.subtitle}</CardSubtitle> */}
-        <CardText className="mt-3">Category : {props.category}</CardText>
+        <CardText className="mt-3">Location : {props.location}</CardText>
         <div className="d-flex justify-content-between">
-        <Button color={props.color} onClick={toggle}>Subscribe</Button>
+        <Button color={props.color} onClick={toggle}>Join</Button>
           <div>
           <Button style={{"padding" : "5px 6px", "marginRight" :"8px"}} color={props.color} onClick={toggle}><i class="bi bi-info-circle-fill"></i></Button>
           <Button style={{"padding" : "5px 6px"}} color="danger" onClick={toggle2}><i class="bi bi-trash-fill"></i></Button>
@@ -185,4 +229,4 @@ const Blog = (props) => {
   );
 };
 
-export default Blog;
+export default ClubCard;
