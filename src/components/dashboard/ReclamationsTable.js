@@ -1,6 +1,5 @@
-
 import axios from "axios";
-import {  useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -14,8 +13,6 @@ import {
   ModalFooter,
   CardText,
 } from "reactstrap";
-
-
 
 const ReclamationsTable = (props) => {
   const { reclamations, increment } = props;
@@ -38,6 +35,7 @@ const ReclamationsTable = (props) => {
         increment();
       });
   };
+
 
   return (
     <>
@@ -107,7 +105,7 @@ const ReclamationsTable = (props) => {
                         <Link to={`/updateReclamation/${tdata.id}`}>
                           <Button className="btn" outline color="info">
                             {" "}
-                            <i class="bi bi-pencil-fill"></i>
+                            <i className="bi bi-pencil-fill"></i>
                           </Button>
                         </Link>
                         <Button
@@ -119,7 +117,7 @@ const ReclamationsTable = (props) => {
                           color="danger"
                         >
                           {" "}
-                          <i class="bi bi-trash"></i>
+                          <i className="bi bi-trash"></i>
                         </Button>
                       </div>
                     </td>

@@ -1,11 +1,21 @@
-import React from "react";
-import { Col, Row, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import {
+  Col,
+  Row,
+  Button,
+  FormGroup,
+  Label,
+  Input,
+  Container,
+} from "reactstrap";
 
-import Blog from "../components/dashboard/Blog";
 import bg1 from "../assets/images/bg/bg1.jpg";
 import bg2 from "../assets/images/bg/bg2.jpg";
 import bg3 from "../assets/images/bg/bg3.jpg";
 import bg4 from "../assets/images/bg/bg4.jpg";
+import EventTable from "../components/dashboard/EventTable";
 
 const BlogData = [
   {
@@ -43,126 +53,112 @@ const BlogData = [
 ];
 
 const EventsPage = () => {
+  const [events, setEvents] = useState([]);
+  const [deleted, setDeleted] = useState(0);
+  const getAll = () => {
+    axios.get("http://localhost:8051/events/all").then((response) => {
+      setEvents(response.data);
+    });
+  };
+  const deleteFun = () => {
+    setDeleted(deleted + 1);
+  };
+  useEffect(() => {
+    getAll();
+  }, [deleted]);
 
   const [modal, setModal] = React.useState(false);
-
-
+  const [dateFilter, setDateFilter] = React.useState({});
   const toggle = () => {
     setModal(!modal);
-  }
-
+  };
+  const [title, setTitle] = useState("");
+  const handleChangeFilterTitle = (e) => {
+    if (e.target.value === "") {
+      getAll();
+    }
+    let filterdEvents = [];
+    filterdEvents = events.filter((event) =>
+      event.title.startsWith(e.target.value)
+    );
+    setEvents(filterdEvents);
+  };
+  const handleChangeFilter = (e) => {
+    setDateFilter({ ...dateFilter, [e.target.name]: e.target.value });
+  };
+  const deleteFilter = () => {
+    getAll();
+  };
+  useEffect(() => {
+    console.log(dateFilter);
+    axios
+      .get("http://localhost:8051/events/date", { params: dateFilter })
+      .then((res) => {
+        setEvents(res.data);
+      });
+  }, [dateFilter]);
   return (
     <div>
-      {/***Top Cards***/}
-
-      <div className="mt-2 mb-4">
-        <Button color="primary" onClick={toggle} >Add Event</Button>
-        <Modal isOpen={modal} toggle={toggle} >
-          <ModalHeader toggle={toggle}>Add Event</ModalHeader>
-          <ModalBody>
-          <Form>
-              <FormGroup>
-                <Label for="exampleEmail">Email</Label>
-                <Input
-                  id="exampleEmail"
-                  name="email"
-                  placeholder="with a placeholder"
-                  type="email"
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="examplePassword">Password</Label>
-                <Input
-                  id="examplePassword"
-                  name="password"
-                  placeholder="password placeholder"
-                  type="password"
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="exampleSelect">Select</Label>
-                <Input id="exampleSelect" name="select" type="select">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="exampleSelectMulti">Select Multiple</Label>
-                <Input
-                  id="exampleSelectMulti"
-                  multiple
-                  name="selectMulti"
-                  type="select"
-                >
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="exampleText">Text Area</Label>
-                <Input id="exampleText" name="text" type="textarea" />
-              </FormGroup>
-              <FormGroup>
-                <Label for="exampleFile">File</Label>
-                <Input id="exampleFile" name="file" type="file" />
-                <FormText>
-                  This is some placeholder block-level help text for the above
-                  input. It's a bit lighter and easily wraps to a new line.
-                </FormText>
-              </FormGroup>
-              <FormGroup tag="fieldset">
-                <legend>Radio Buttons</legend>
-                <FormGroup check>
-                  <Input name="radio1" type="radio" />{" "}
-                  <Label check>
-                    Option one is this and that—be sure to include why it's
-                    great
-                  </Label>
-                </FormGroup>
-                <FormGroup check>
-                  <Input name="radio1" type="radio" />{" "}
-                  <Label check>
-                    Option two can be something else and selecting it will
-                    deselect option one
-                  </Label>
-                </FormGroup>
-                <FormGroup check disabled>
-                  <Input disabled name="radio1" type="radio" />{" "}
-                  <Label check>Option three is disabled</Label>
-                </FormGroup>
-              </FormGroup>
-              <FormGroup check>
-                <Input type="checkbox" /> <Label check>Check me out</Label>
-              </FormGroup>
-              <Button>Submit</Button>
-            </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={toggle}>Do Something</Button>{' '}
-            <Button color="secondary" onClick={toggle}>Cancel</Button>
-          </ModalFooter>
-        </Modal>
-      </div>
-      {/***Blog Cards***/}
-      <Row>
-        {BlogData.map((blg, index) => (
-          <Col sm="6" lg="6" xl="3" key={index}>
-            <Blog
-              image={blg.image}
-              title={blg.title}
-              subtitle={blg.subtitle}
-              text={blg.description}
-              color={blg.btnbg}
-            />
+      <Container fluid="lg">
+        <Row>
+          <Col md={4}>
+            <FormGroup>
+              <Label>StartDate</Label>
+              <Input
+                size={"small"}
+                id="startDate"
+                name="date1"
+                type="date"
+                onChange={handleChangeFilter}
+              />
+            </FormGroup>
           </Col>
-        ))}
+          <Col md={4}>
+            <FormGroup>
+              <Label>EndDate</Label>
+              <Input
+                size={"small"}
+                id="endDate"
+                name="date2"
+                type="date"
+                onChange={handleChangeFilter}
+              />
+            </FormGroup>
+          </Col>
+          <Col md={4}>
+            <FormGroup>
+              <Label>Title</Label>
+              <Input
+                size={"small"}
+                id="title"
+                name="title"
+                type="text"
+                onChange={handleChangeFilterTitle}
+              ></Input>
+            </FormGroup>
+          </Col>
+        </Row>
+      </Container>
+      <Row>
+        <Col lg="12">
+          <EventTable events={events} deleteFun={deleteFun}></EventTable>
+        </Col>
       </Row>
+      <Link to={"/addEvent"}>
+        <Button className="btn" outline color="info">
+          <i class="bi bi-plus"></i>Add Event
+        </Button>
+      </Link>
+      <Button
+        className="btn m-2"
+        onClick={() => {
+          deleteFilter();
+        }}
+        outline
+        color="info"
+      >
+        Delete Filters
+      </Button>
     </div>
   );
 };

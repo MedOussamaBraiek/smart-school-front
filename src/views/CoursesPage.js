@@ -1,7 +1,18 @@
 import React from "react";
-import { Col, Row, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-
-
+import {
+  Col,
+  Row,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  FormText,
+} from "reactstrap";
 
 import Blog from "../components/dashboard/Blog";
 import bg1 from "../assets/images/bg/bg1.jpg";
@@ -45,21 +56,27 @@ const BlogData = [
   },
 ];
 
-
 const CoursePage = () => {
 
   const baseUlr = "http://localhost:8051/courses"
 
   const requestOptions = {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin' : '*' }
-};
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+  };
 
-  const [courses, setCourses] = React.useState(null);
+  const [courses, setCourses] = React.useState([]);
 
   const [modal, setModal] = React.useState(false);
 
-  const [formData, setData] = React.useState({ name: "", description: "",category: "" });
+  const [formData, setData] = React.useState({
+    name: "",
+    description: "",
+    category: "",
+  });
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [category, setCategory] = React.useState("");
@@ -67,7 +84,10 @@ const CoursePage = () => {
   const getCourses = () => {
     fetch(baseUlr)
     .then((response) => response.json())
-    .then(res => setCourses(res))
+    .then((response) => 
+        setCourses(response)
+    )
+    .catch((err) => console.error(err));
   }
 
   React.useEffect(() => {
@@ -76,7 +96,7 @@ const CoursePage = () => {
 
   const toggle = () => {
     setModal(!modal);
-  }
+  };
 
   const handleChangeName = (e) => {
     setName(e.target.value);
@@ -106,7 +126,7 @@ const CoursePage = () => {
 
     axios.post('http://localhost:8051/courses', 
     course, customConfig)
-    .then(response => console.log(response));
+    .then(response => console.log("new course added"));
   }
 
 
@@ -161,12 +181,12 @@ const CoursePage = () => {
         <Modal isOpen={modal} toggle={toggle} >
           <ModalHeader toggle={toggle}>Add Course</ModalHeader>
           <ModalBody>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit(e);
-            }}
-          >
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(e);
+              }}
+            >
               <FormGroup>
                 <Label for="name">Name</Label>
                 <Input
@@ -200,11 +220,15 @@ const CoursePage = () => {
                   onChange={handleChangeCategory}
                 />
               </FormGroup>
-             
+
               {/* <Button>Submit</Button> */}
               <ModalFooter>
-                <Button color="primary" type="submit" onClick={toggle}>Submit</Button>
-                <Button color="danger" onClick={toggle}>Cancel</Button>
+                <Button color="primary" type="submit" onClick={toggle}>
+                  Submit
+                </Button>
+                <Button color="danger" onClick={toggle}>
+                  Cancel
+                </Button>
               </ModalFooter>
             </form>
           </ModalBody>
@@ -214,9 +238,10 @@ const CoursePage = () => {
       {/***Blog Cards***/}
       <Row>
         {/* {BlogData.map((blg, index) => ( */}
-        {courses && courses.map((course, index) => (
-          <Col sm="6" lg="6" xl="3" key={index}>
-            {/* {courses && courses.map((course,index) => {
+        {courses &&
+          courses.map((course, index) => (
+            <Col sm="6" lg="6" xl="3" key={index}>
+              {/* {courses && courses.map((course,index) => {
               
             })} */}
             <Blog
