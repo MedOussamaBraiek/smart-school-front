@@ -25,9 +25,14 @@ const ReclamationsPage = () => {
   const handleChangeFilter = (e) => {
     setfilter({ ...filter, [e.target.name]: e.target.value });
   };
-  const deleteFilter=()=>{
-  setfilter({})
-  }
+  const getall = () => {
+    axios.get(`http://localhost:8051/reclamations/all`).then((res) => {
+      setReclamations(res.data);
+    });
+  };
+  const deleteFilter = () => {
+    getall();
+  };
   const increment = () => {
     setDeleted(deleted + 1);
   };
@@ -114,11 +119,16 @@ const ReclamationsPage = () => {
           <i className="bi bi-plus"></i>Add Reclamation
         </Button>
       </Link>
-      <Button className="btn m-2" onClick={()=>{
-        deleteFilter();
-      }} outline color="info">
-       Delete Filter
-        </Button>
+      <Button
+        className="btn m-2"
+        onClick={() => {
+          deleteFilter();
+        }}
+        outline
+        color="info"
+      >
+        Delete Filter
+      </Button>
     </div>
   );
 };
