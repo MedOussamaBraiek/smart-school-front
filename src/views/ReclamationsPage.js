@@ -25,8 +25,13 @@ const ReclamationsPage = () => {
   const handleChangeFilter = (e) => {
     setfilter({ ...filter, [e.target.name]: e.target.value });
   };
+  const getall = () => {
+    axios.get(`http://localhost:8051/reclamations/all`).then((res) => {
+      setReclamations(res.data);
+    });
+  };
   const deleteFilter = () => {
-    setfilter({});
+    getall();
   };
   const increment = () => {
     setDeleted(deleted + 1);
