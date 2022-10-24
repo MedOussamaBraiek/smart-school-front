@@ -108,7 +108,9 @@ const Header = () => {
             <DropdownItem divider />
 
             <DropdownItem>Inbox</DropdownItem>
-            <DropdownItem>Logout</DropdownItem>
+            <DropdownItem onClick={() => localStorage.setItem("token", "")}>
+              Logout
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </Collapse>

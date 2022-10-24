@@ -1,6 +1,6 @@
 import axios from "axios";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import {
   Card,
@@ -51,6 +51,7 @@ export default function Register() {
       )
       .then((response) => {
         console.log(response.data);
+        Navigate("/login");
       });
   };
 
