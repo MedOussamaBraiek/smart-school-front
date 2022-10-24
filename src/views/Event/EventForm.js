@@ -37,6 +37,18 @@ const EventForm = () => {
     validateOnChange: false,
     validateOnBlur: false,
   });
+
+  // axios
+  // .post("http://localhost:8051/events/assign", {
+  //   params: {
+  //     eventId: values.eventId,
+  //     reclamationId: res.data.id,
+  //   },
+  // })
+  // .then((res) => {
+  //   if (res.data) {
+  //     Navigate("/reclamations");
+  //   }
   return (
     <Row>
       <Col>
