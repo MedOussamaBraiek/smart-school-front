@@ -13,6 +13,7 @@ const LoginPage = lazy(() => import("../views/Login.js"));
 const RegisterPage = lazy(() => import("../views/Register.js"));
 const UsersPage = lazy(() => import("../views/UsersPage.js"));
 const CoursesPage = lazy(() => import("../views/CoursesPage.js"));
+const ClassePage = lazy(() => import("../views/ClassePage.js"));
 const ClubsPage = lazy(() => import("../views/ClubsPage.js"));
 const EventsPage = lazy(() => import("../views/EventsPage.js"));
 const ReclamationsPage = lazy(() => import("../views/ReclamationsPage.js"));
@@ -47,6 +48,7 @@ const ThemeRoutes = [
 
       { path: "/starter", exact: true, element: <Starter /> },
       { path: "/courses", exact: true, element: <CoursesPage /> },
+      { path: "/classes", exact: true, element: <ClassePage /> },
       { path: "/forums", exact: true, element: <ForumsPage /> },
       { path: "/clubs", exact: true, element: <ClubsPage /> },
       { path: "/users", exact: true, element: <UsersPage /> },

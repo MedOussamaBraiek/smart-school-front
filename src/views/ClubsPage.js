@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Col, Row, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText, Alert } from 'reactstrap';
 
 import Blog from "../components/dashboard/Blog";
 import bg1 from "../assets/images/bg/bg1.jpg";
@@ -107,7 +107,9 @@ const ClubsPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setIsSubmit(true);
+    setFormErrors(validate(formData));
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
     const club = { name, description, location, email, website, phone,date };
 
     const customConfig = {
@@ -116,11 +118,15 @@ const ClubsPage = () => {
       // 'Access-Control-Allow-Origin': '*'
       }
   };
-
-
     axios.post('http://localhost:8051/clubs', 
     club, customConfig)
-    .then(response => console.log(response));
+    .then(response => {console.log(response);
+      window.location.reload()});
+  }
+    else{
+      console.log(formErrors)
+      console.log("Error!")
+    }
   }
 
   const [search, setSearch] = React.useState("");
@@ -137,6 +143,43 @@ const ClubsPage = () => {
     } else getClubs();
   };
 
+  const [formErrors, setFormErrors] = React.useState({});
+  const [isSubmit, setIsSubmit] = React.useState(false);
+
+  const validate = (values) => {
+    const errors = {};
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    const regex2 = new RegExp('^[0-9]+$');
+    if (!values.name) {
+      errors.name = "Name is required!";
+    }
+    if (!values.description) {
+      errors.description = "Description is required!";
+    }else if (values.description.length < 10) {
+      errors.description = "Description must be more than 10 characters";
+    } else if (values.description.length > 200) {
+      errors.description = "Description cannot exceed more than 200 characters";
+    }
+    if (!values.location) {
+      errors.location = "Location is required!";
+    }
+    if (!values.email) {
+      errors.email = "Email is required!";
+    }else if (!regex.test(values.email)) {
+      errors.email = "This is not a valid email format!";
+    }
+    if (!values.phone) {
+      errors.phone = "Phone is required!";
+    }else if (!regex2.test(values.phone)) {
+      errors.phone = "This is not a valid Phone number!";
+    }
+    if (!values.date) {
+      errors.date = "Date is required!";
+    }
+   
+    return errors;
+  };
+
   return (
     <div>
       {/***Top Cards***/}
@@ -144,6 +187,9 @@ const ClubsPage = () => {
     <div className="mt-2 mb-4">
       <div className="d-flex justify-content-between">
         <Button color="dark" onClick={toggle} >Add Club</Button>
+        <div>
+            <h3 style={{"fontWeight":"600", "textDecoration":"underline"}}>CLUBS</h3>
+          </div>
         <div className="search__input d-flex">
                   <Input
                     type="text"
@@ -189,6 +235,7 @@ const ClubsPage = () => {
                   onChange={handleChangeName}
                 />
               </FormGroup>
+              {formErrors.name && <Alert color="danger">{formErrors.name}</Alert>}
               <FormGroup>
                 <Label for="description">Description</Label>
                 <Input
@@ -200,6 +247,7 @@ const ClubsPage = () => {
                   onChange={handleChangeDescription}
                 />
               </FormGroup>
+              {formErrors.description && <Alert color="danger">{formErrors.description}</Alert>}
               <FormGroup>
                 <Label for="name">Location</Label>
                 <Input
@@ -211,6 +259,7 @@ const ClubsPage = () => {
                   onChange={handleChangeLocation}
                 />
               </FormGroup>
+              {formErrors.location && <Alert color="danger">{formErrors.location}</Alert>}
               <FormGroup>
                 <Label for="name">Email</Label>
                 <Input
@@ -222,6 +271,7 @@ const ClubsPage = () => {
                   onChange={handleChangeEmail}
                 />
               </FormGroup>
+              {formErrors.email && <Alert color="danger">{formErrors.email}</Alert>}
               <FormGroup>
                 <Label for="name">Website</Label>
                 <Input
@@ -233,6 +283,7 @@ const ClubsPage = () => {
                   onChange={handleChangeWebsite}
                 />
               </FormGroup>
+              {formErrors.website && <Alert color="danger">{formErrors.website}</Alert>}
               <FormGroup>
                 <Label for="name">Phone</Label>
                 <Input
@@ -244,6 +295,7 @@ const ClubsPage = () => {
                   onChange={handleChangePhone}
                 />
               </FormGroup>
+              {formErrors.phone && <Alert color="danger">{formErrors.phone}</Alert>}
               <FormGroup>
                 <Label for="name">Date</Label>
                 <Input
@@ -255,10 +307,11 @@ const ClubsPage = () => {
                   onChange={handleChangeDate}
                 />
               </FormGroup>
+              {formErrors.date && <Alert color="danger">{formErrors.date}</Alert>}
              
               {/* <Button>Submit</Button> */}
               <ModalFooter>
-                <Button color="primary" type="submit" onClick={toggle}>Submit</Button>
+                <Button color="primary" type="submit">Submit</Button>
                 <Button color="danger" onClick={toggle}>Cancel</Button>
               </ModalFooter>
             </form>

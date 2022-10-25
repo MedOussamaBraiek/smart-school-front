@@ -7,6 +7,7 @@ import {
   CardText,
   CardTitle,
   Button,
+  Alert,
 } from "reactstrap";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import React from 'react';
@@ -17,7 +18,7 @@ const Blog = (props) => {
     //const id = "6355a85b2599f273351c738b";
     console.log(props.id)
     axios.delete(`http://localhost:8051/courses/${props.id}`)
-    .then(res => console.log(res));
+    .then(res => {console.log(res);window.location.reload()});
     toggle2();
   }
 
@@ -61,7 +62,9 @@ const Blog = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setIsSubmit(true);
+    setFormErrors(validate(formData));
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
     const coursee = { name, description, category };
     const idd = {
       id : props.id
@@ -77,8 +80,38 @@ const Blog = (props) => {
   
     axios.put(`http://localhost:8051/courses`, 
     course, customConfig)
-    .then(response => console.log(response));
+    .then(response => {console.log(response);
+      window.location.reload()});
   }
+  else{
+    console.log(formErrors)
+    console.log("Error!")
+  }
+}
+
+  const [formErrors, setFormErrors] = React.useState({});
+  const [isSubmit, setIsSubmit] = React.useState(false);
+
+  const validate = (values) => {
+    const errors = {};
+    // const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    if (!values.name) {
+      errors.name = "Name is required!";
+    }
+
+    if (!values.description) {
+      errors.description = "Description is required!";
+    }else if (values.description.length < 10) {
+      errors.description = "Description must be more than 10 characters";
+    } else if (values.description.length > 200) {
+      errors.description = "Description cannot exceed more than 200 characters";
+    }
+    if (!values.category) {
+      errors.category = "Category is required!";
+    }
+   
+    return errors;
+  };
   
 
   return (
@@ -133,6 +166,7 @@ const Blog = (props) => {
                   onChange={handleChangeName}
                 />
               </FormGroup>
+              {formErrors.name && <Alert color="danger">{formErrors.name}</Alert>}
               <FormGroup>
                 <Label for="description">Description</Label>
                 <Input
@@ -144,6 +178,7 @@ const Blog = (props) => {
                   onChange={handleChangeDescription}
                 />
               </FormGroup>
+              {formErrors.description && <Alert color="danger">{formErrors.description}</Alert>}
               <FormGroup>
                 <Label for="name">Category</Label>
                 <Input
@@ -155,10 +190,11 @@ const Blog = (props) => {
                   onChange={handleChangeCategory}
                 />
               </FormGroup>
+              {formErrors.category && <Alert color="danger">{formErrors.category}</Alert>}
              
               {/* <Button>Submit</Button> */}
               <ModalFooter>
-                <Button color="primary" type="submit" onClick={toggle3}>Submit</Button>
+                <Button color="primary" type="submit" >Submit</Button>
                 <Button color="danger" onClick={toggle3}>Cancel</Button>
               </ModalFooter>
             </form>
@@ -167,7 +203,7 @@ const Blog = (props) => {
     
     <Card>
       <CardImg alt="Card image cap" src={props.image} />
-      <Button style={{"padding" : "5px 6px", "marginRight" :"8px"}} color={props.color} onClick={toggle3}>Update</Button>
+      <Button style={{"padding" : "5px 6px"}} color={props.color} onClick={toggle3}>Update</Button>
       <CardBody className="p-4 pt-3">
         <CardTitle tag="h5">{props.name}</CardTitle>
         {/* <CardSubtitle className="mt-2 ">{props.subtitle}</CardSubtitle> */}

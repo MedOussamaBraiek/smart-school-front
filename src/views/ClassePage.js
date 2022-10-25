@@ -15,7 +15,7 @@ import {
   Alert,
 } from "reactstrap";
 
-import Blog from "../components/dashboard/Blog";
+import ClasseCard from "../components/dashboard/ClasseCard";
 import bg1 from "../assets/images/bg/bg1.jpg";
 import bg2 from "../assets/images/bg/bg2.jpg";
 import bg3 from "../assets/images/bg/bg3.jpg";
@@ -57,37 +57,56 @@ const BlogData = [
   },
 ];
 
-const CoursePage = () => {
+const ClassePage = () => {
 
-  const baseUlr = "http://localhost:8051/courses"
+  const baseUlr = "http://localhost:8051/classes"
 
-  const [courses, setCourses] = React.useState([]);
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+  };
+
+  const [classes, setclasses] = React.useState([]);
 
   const [modal, setModal] = React.useState(false);
 
   const [formData, setData] = React.useState({
     name: "",
     description: "",
-    category: "",
+    floor: "",
+    type:"",
+    number:""
   });
   const [name, setName] = React.useState("");
+  const [floor, setFloor] = React.useState("");
+  const [number, setNumber] = React.useState("");
+  const [type, setType] = React.useState("");
   const [description, setDescription] = React.useState("");
-  const [category, setCategory] = React.useState("");
 
-  const [options, setoptions] = React.useState(['All','Advanced', 'Beginner']);
-
-  const getCourses = () => {
+  const getClasses = () => {
     fetch(baseUlr)
-    .then((response) => response.json())
-    .then((response) => {
-        setCourses(response)
-      }
-    )
-    .catch((err) => console.error(err));
-  }
+    .then((response) => { 
+        if(response.status!= 204) {
+            response.json()
+            .then((response) => 
+            {
+                console.log(response)
+                setclasses(response)
+            })
+            .catch((err) => console.error(err));
+        } else {
+            console.log("204")
+        }
+    });
+    } 
+    
+  
 
   React.useEffect(() => {
-    getCourses();
+    getClasses();
    }, []);
 
   const toggle = () => {
@@ -102,14 +121,17 @@ const CoursePage = () => {
     setDescription(e.target.value);
     setData({ ...formData, description: e.target.value });
   };
-  const handleChangeCategory = (e) => {
-    setCategory(e.target.value);
-    setData({ ...formData, category: e.target.value });
+  const handleChangeFloor = (e) => {
+    setFloor(e.target.value);
+    setData({ ...formData, floor: e.target.value });
   };
-
-  const [categoryf, setCategoryf] = React.useState("");
-  const handleFilterCategory = (e) => {
-    setCategoryf(e.target.value);
+  const handleChangeNumber = (e) => {
+    setNumber(e.target.value);
+    setData({ ...formData, number: e.target.value });
+  };
+  const handleChangeType = (e) => {
+    setType(e.target.value);
+    setData({ ...formData, type: e.target.value });
   };
 
   const handleSubmit = (e) => {
@@ -117,23 +139,26 @@ const CoursePage = () => {
     setIsSubmit(true);
     setFormErrors(validate(formData));
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-    const course = { name, description, category };
+    const classe = { name, floor, number, type, description };
 
     const customConfig = {
       headers: {
       'Content-Type': 'application/json',
+      // 'Access-Control-Allow-Origin': '*'
       }
   };
-    axios.post('http://localhost:8051/courses', 
-    course, customConfig)
-    .then(response => {console.log("new course added");
+
+    axios.post('http://localhost:8051/classes', 
+    classe, customConfig)
+    .then(response => {console.log("new classe added")
     window.location.reload()});
   }
-  else{
-    console.log(formErrors)
-    console.log("Error!")
+    else{
+        console.log(formErrors)
+        console.log("Error!")
+    }
   }
-  }
+
 
   const [search, setSearch] = React.useState("");
 
@@ -141,12 +166,12 @@ const CoursePage = () => {
     setSearch(e.target.value);
 
     if (e.target.value) {
-      setCourses(
-        courses.filter((course) =>
+      setclasses(
+        classes.filter((course) =>
           course.name.toLowerCase().startsWith(e.target.value.toLowerCase())
         )
       );
-    } else getCourses();
+    } else getClasses();
   };
 
   const [formErrors, setFormErrors] = React.useState({});
@@ -154,6 +179,7 @@ const CoursePage = () => {
 
   const validate = (values) => {
     const errors = {};
+    const regex2 = new RegExp('^[0-9]+$');
     if (!values.name) {
       errors.name = "Name is required!";
     }
@@ -165,25 +191,22 @@ const CoursePage = () => {
     } else if (values.description.length > 200) {
       errors.description = "Description cannot exceed more than 200 characters";
     }
-    if (!values.category) {
-      errors.category = "Category is required!";
+    if (!values.floor) {
+        errors.floor = "Floor is required!";
+      }else if (!regex2.test(values.floor)) {
+        errors.floor = "This is not a valid Floor!";
+      }
+    if (!values.type) {
+      errors.type = "Type is required!";
     }
+    if (!values.number) {
+        errors.number = "number is required!";
+      }else if (!regex2.test(values.number)) {
+        errors.number = "This is not a valid number!";
+      }
    
     return errors;
   };
-
-  React.useEffect(() => {
-    axios
-      .get(`http://localhost:8051/courses/category/${categoryf}`)
-      .then((res) => {
-        if (res.data) {
-          setCourses(res.data);
-        }
-        if(categoryf === 'All'){
-          getCourses();
-        }
-      });
-  }, [categoryf]);
 
 
   return (
@@ -192,33 +215,15 @@ const CoursePage = () => {
 
 
      <div className="mt-2 mb-4">
-        <div className="d-flex justify-content-between align-items-center">
-          <Button color="primary" onClick={toggle} >Add Course</Button>
-
-          <FormGroup className="">
-              <Label>Category :</Label>
-              <Input
-                size={"small"}
-                id="category"
-                name="category"
-                type="select"
-                onChange={handleFilterCategory}
-              >
-                {options.map((option, key) => (
-                  <option key={key} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </Input>
-            </FormGroup>
-
+        <div className="d-flex justify-content-between">
+          <Button color="primary" onClick={toggle} >Add Classe</Button>
           <div>
-            <h3 style={{"fontWeight":"600", "textDecoration":"underline"}}>COURSES</h3>
+            <h3 style={{"fontWeight":"600", "textDecoration":"underline"}}>CLASSES</h3>
           </div>
           <div className="search__input d-flex">
                   <Input
                     type="text"
-                    placeholder="Search Course..."
+                    placeholder="Search Classe..."
                     value={search}
                     onChange={handleSearch}
                   />
@@ -238,11 +243,11 @@ const CoursePage = () => {
                       />
                     </svg>
                   </span>
-                </div>
+            </div>
         </div>
         {/* <Button color="primary" onClick={deleteCourse} >Delete Course</Button> */}
         <Modal isOpen={modal} toggle={toggle} >
-          <ModalHeader toggle={toggle}>Add Course</ModalHeader>
+          <ModalHeader toggle={toggle}>Add Classe</ModalHeader>
           <ModalBody>
             <form
               onSubmit={(e) => {
@@ -263,7 +268,19 @@ const CoursePage = () => {
               </FormGroup>
               {formErrors.name && <Alert color="danger">{formErrors.name}</Alert>}
               <FormGroup>
-                <Label for="description">Description</Label>
+                <Label for="description">Floor</Label>
+                <Input
+                  id="floor"
+                  name="floor"
+                  placeholder="Floor"
+                  type="textarea"
+                  value={floor}
+                  onChange={handleChangeFloor}
+                />
+              </FormGroup>
+              {formErrors.floor && <Alert color="danger">{formErrors.floor}</Alert>}
+              <FormGroup>
+                <Label for="name">Description</Label>
                 <Input
                   id="description"
                   name="description"
@@ -275,21 +292,33 @@ const CoursePage = () => {
               </FormGroup>
               {formErrors.description && <Alert color="danger">{formErrors.description}</Alert>}
               <FormGroup>
-                <Label for="name">Category</Label>
+                <Label for="name">Number</Label>
                 <Input
-                  id="category"
-                  name="category"
-                  placeholder="Category"
-                  type="text"
-                  value={category}
-                  onChange={handleChangeCategory}
+                  id="number"
+                  name="number"
+                  placeholder="Number"
+                  type="textarea"
+                  value={number}
+                  onChange={handleChangeNumber}
                 />
               </FormGroup>
-              {formErrors.category && <Alert color="danger">{formErrors.category}</Alert>}
+              {formErrors.number && <Alert color="danger">{formErrors.number}</Alert>}
+              <FormGroup>
+                <Label for="name">Type</Label>
+                <Input
+                  id="type"
+                  name="type"
+                  placeholder="Type"
+                  type="textarea"
+                  value={type}
+                  onChange={handleChangeType}
+                />
+              </FormGroup>
+              {formErrors.type && <Alert color="danger">{formErrors.type}</Alert>}
 
               {/* <Button>Submit</Button> */}
               <ModalFooter>
-                <Button color="primary" type="submit">
+                <Button color="primary" type="submit" >
                   Submit
                 </Button>
                 <Button color="danger" onClick={toggle}>
@@ -304,19 +333,21 @@ const CoursePage = () => {
       {/***Blog Cards***/}
       <Row>
         {/* {BlogData.map((blg, index) => ( */}
-        {courses &&
-          courses.map((course, index) => (
+        {classes &&
+          classes.map((classe, index) => (
             <Col sm="6" lg="6" xl="3" key={index}>
-              {/* {courses && courses.map((course,index) => {
+              {/* {classes && classes.map((course,index) => {
               
             })} */}
-            <Blog
-              image={bg1}
-              name={course.name}
-              description={course.description}
-              category={course.category}
+            <ClasseCard
+              image={bg3}
+              name={classe.name}
+              description={classe.description}
+              floor={classe.floor}
+              type={classe.type}
+              number={classe.number}
               color={"primary"}
-              id={course.id}
+              id={classe._id}
             />
           </Col>
         ))}
@@ -325,4 +356,4 @@ const CoursePage = () => {
   );
 };
 
-export default CoursePage;
+export default ClassePage;
