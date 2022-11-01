@@ -81,12 +81,14 @@ const CoursePage = () => {
     .then((response) => response.json())
     .then((response) => {
         setCourses(response)
+        console.log(response)
       }
     )
     .catch((err) => console.error(err));
   }
 
   React.useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
     getCourses();
    }, []);
 
@@ -184,6 +186,7 @@ const CoursePage = () => {
         }
       });
   }, [categoryf]);
+  
 
 
   return (

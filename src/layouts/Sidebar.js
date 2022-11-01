@@ -10,8 +10,13 @@ const navigation = [
     icon: "bi bi-speedometer2",
   },
   {
-    title: "Users",
-    href: "/users",
+    title: "Students",
+    href: "/students",
+    icon: "bi bi-speedometer2",
+  },
+  {
+    title: "Teachers",
+    href: "/teachers",
     icon: "bi bi-speedometer2",
   },
   {
@@ -20,30 +25,20 @@ const navigation = [
     icon: "bi bi-speedometer2",
   },
   {
-    title: "Classes",
-    href: "/classes",
+    title: "School",
+    href: "/school",
     icon: "bi bi-speedometer2",
   },
   {
-    title: "Clubs",
-    href: "/clubs",
+    title: "Departments",
+    href: "/departments",
     icon: "bi bi-speedometer2",
   },
   {
-    title: "Events",
-    href: "/events",
+    title: "Blocs",
+    href: "/Blocs",
     icon: "bi bi-speedometer2",
   },
-  {
-    title: "Reclamations",
-    href: "/reclamations",
-    icon: "bi bi-speedometer2",
-  },
-  {
-    title: "Forums",
-    href: "/forums",
-    icon: "bi bi-speedometer2",
-  }
 ];
 
 const Sidebar = () => {
